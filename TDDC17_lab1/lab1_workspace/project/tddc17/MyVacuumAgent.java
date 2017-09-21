@@ -44,13 +44,10 @@ class MyAgentState
 	
 	
 	//Our variables
-	public boolean isHome = false;
-	public boolean firstTime = true;
-	public boolean hasReachedRight = false;
-	public boolean hasReachedDown = false;
 	Stack<Integer> dirStack = new Stack<>();
 	ArrayList<Integer> dirListHome = new ArrayList<>();
 	public boolean hasVisitHome = false;
+	final int DONECLEANING = -1;
 	
 	MyAgentState()
 	{
@@ -146,6 +143,7 @@ class MyAgentProgram implements AgentProgram {
 	@Override
 	public Action execute(Percept percept) {
 		
+		//Our variables
 		Action actionToExecute;
 		int dir;
 		
@@ -185,6 +183,7 @@ class MyAgentProgram implements AgentProgram {
 	    state.updatePosition((DynamicPercept)percept);
 
 	    if (bump) {
+	    	//remove the current direction from the dirStack if we go in to a wall
 	    	if (!state.dirStack.isEmpty()) {
 	    		state.dirStack.pop();
 	    	}
@@ -217,41 +216,41 @@ class MyAgentProgram implements AgentProgram {
 	    	state.agent_last_action=state.ACTION_SUCK;
 	    	return LIUVacuumEnvironment.ACTION_SUCK;
 	    }
-	    // Koppierar rutt från random pos tills vi för första gången besöker hem.
-	    if (state.world[state.agent_x_position][state.agent_y_position] == state.world[1][1] && !state.hasVisitHome) {
+	    // Copy path from the random start position until we visit the home position for the first time 
+	    if (state.world[state.agent_x_position][state.agent_y_position] == state.world[1][1] && 
+	    		!state.hasVisitHome) {
 			state.dirListHome.addAll(state.dirStack);
 			state.hasVisitHome = true;
 		}
 	    
-		//if (!bump){
-			if(!bump && !isVisitedDirr()) {
-				state.dirStack.push(state.agent_direction);
-				actionToExecute = forward();
-			}
-			else if (!isVistitedLeft()) {
-				actionToExecute = left();
-			}
-			else if (!isVistitedRight()) {
-				actionToExecute = right();
-			}	
-		//}
+		//this is where the main desicion loop start for the vacuum cleaner
+		if(!bump && !isVisitedDirr()) {
+			state.dirStack.push(state.agent_direction);
+			actionToExecute = forward();
+		}
+		else if (!isVistitedLeft()) {
+			actionToExecute = left();
+		}
+		else if (!isVistitedRight()) {
+			actionToExecute = right();
+		}	
 		else {
-			// GÅ TBX TILLS DU HITTAR NY VÄG
+			//In this part of the loop we decide what the vacuum cleaner should do if we reach 
+			//a dead end and need to go back and look for a new path.
 			dir = getReversedDirr();
-			if(dir == -1){
+			if(dir == state.DONECLEANING){
 				return NoOpAction.NO_OP;
 			}
 			else if (state.agent_direction != dir) {
-				//finns det plats för förbättring
 				actionToExecute = left();
 			}
 			else {
+				//In this part of the loop we use the stack to navigate backwards
 				actionToExecute = forward();
 				if (!state.dirStack.isEmpty()) {
 					state.dirStack.pop();
 				}
 				else if (!state.dirListHome.isEmpty() && !bump) {
-					System.out.println("FOROROROOOOFR");
 					state.dirListHome.remove(0);
 				}
 				else {
@@ -259,12 +258,13 @@ class MyAgentProgram implements AgentProgram {
 				}
 			}	
 		}
-		
-		System.out.println("DIRSTACK= " + state.dirStack);
-		System.out.println("HOMESTACK= " + state.dirListHome);
 		return actionToExecute;
 	}
 	
+	/*
+	 * This function gives us the right direction to move when moving back from a dead end
+	 * or if we are done cleaning and should go back to its home position. 
+	 */
 	private int getReversedDirr() {
 		int dir = -1;
 		int homeDir = -1;
@@ -285,9 +285,12 @@ class MyAgentProgram implements AgentProgram {
 		case MyAgentState.WEST:
 			return state.EAST;
 		}
-		return homeDir;  // Should not reach!!!
+		return homeDir;
 	}
 	
+	/*
+	 * This function return true if the block in front of the vacuum cleaner is visited else false  
+	 */
 	private boolean isVisitedDirr(){
 		switch (state.agent_direction) {
 		case MyAgentState.NORTH:
@@ -302,6 +305,9 @@ class MyAgentProgram implements AgentProgram {
 		return false;
 	}
 	
+	/*
+	 * This function return true if the block to the left of the vacuum cleaner is visited else false
+	 */
 	private boolean isVistitedLeft(){
 		switch (state.agent_direction) {
 		case MyAgentState.NORTH:
@@ -316,6 +322,9 @@ class MyAgentProgram implements AgentProgram {
 		return false;
 	}
 	
+	/*
+	 * This function return true if the block to the right of the vacuum cleaner is visited else false
+	 */
 	private boolean isVistitedRight(){
 		switch (state.agent_direction) {
 		case MyAgentState.NORTH:
@@ -330,12 +339,10 @@ class MyAgentProgram implements AgentProgram {
 		return false;
 	}
 	
+	/*
+	 * This function look if a block is visited
+	 */
 	private boolean isVisited(int x, int y) {
-		/*if (state.world[x][y] == state.HOME && !state.hasVisitHome) {
-			state.dirHome.addAll(state.dirStack);
-			state.hasVisitHome = true;
-			return false;
-		}*/		
 		if (state.world[x][y] != state.UNKNOWN && state.world[x][y] != state.HOME) {
 			return true;
 		}
@@ -344,10 +351,9 @@ class MyAgentProgram implements AgentProgram {
 		}
 	}
 	
-	private boolean isHome(int x, int y) {
-		return state.isHome = state.world[x][y] == state.HOME;
-	}
-
+	/*
+	 * This function make the vacuum cleaner turn left and update its direction
+	 */
 	private Action left() {
 	    state.agent_direction = ((state.agent_direction-1) % 4);
 	    if (state.agent_direction<0) 
@@ -355,13 +361,17 @@ class MyAgentProgram implements AgentProgram {
 	    state.agent_last_action = state.ACTION_TURN_LEFT;
 		return LIUVacuumEnvironment.ACTION_TURN_LEFT;
 	}
-	
+	/*
+	 * This function make the vacuum cleaner turn right and update its direction
+	 */
 	private Action right() {
 		state.agent_direction = ((state.agent_direction+1) % 4);
 	    state.agent_last_action = state.ACTION_TURN_RIGHT;
 	    return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
 	}
-	
+	/*
+	 * This function make the vacuum cleaner go forward one step
+	 */
 	private Action forward() {
     	state.agent_last_action=state.ACTION_MOVE_FORWARD;
     	return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
