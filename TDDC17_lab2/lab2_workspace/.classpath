@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="lab2_part1/src"/>
+	<classpathentry kind="lib" path=".metadata/.plugins/com.google.appengine.eclipse.core/appengine-sdk-proxy.jar"/>
+	<classpathentry kind="lib" path="lab2_part1/lib/searchHidden.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="lab2_part1/src"/>
+</classpath>
