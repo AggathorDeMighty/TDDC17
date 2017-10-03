@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;tddc17.MyAgentProgram.initVac(...)&apos; to &apos;goToRight&apos;&#x0A;- Original project: &apos;project&apos;&#x0A;- Original element: &apos;tddc17.MyAgentProgram.initVac(...)&apos;&#x0A;- Renamed element: &apos;tddc17.MyAgentProgram.goToRight(...)&apos;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;initVac&apos;" flags="589826" id="org.eclipse.jdt.ui.rename.method" input="/&lt;tddc17{MyVacuumAgent.java[MyAgentProgram~initVac~Z" name="goToRight" references="true" stamp="1505392550825" version="1.0"/>
+</session>

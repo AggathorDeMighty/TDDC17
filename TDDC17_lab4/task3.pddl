@@ -1,4 +1,3 @@
-
 ;; This is a plain STRIPS formulation of the standard Logistics domain.
 
 ;; In this domain, there are six different types of objects: "object"
@@ -18,8 +17,8 @@
   (:predicates
 
    ;; Static predicates:
-   (object ?o) (truck ?t) (airplane ?p) (vehicle ?v)
-   (location ?l) (airport ?a) (city ?c) (loc ?l ?c)
+   (object ?o) (truck ?t) (airplane ?p) (ship ?s) (vehicle ?v)
+   (location ?l) (airport ?a) (city ?c) (loc ?l ?c) (bay ?b)
 
    ;; Non-static predicates:
    (at ?x ?l) ;; ?x (package or vehicle) is at location ?l
@@ -52,7 +51,7 @@
     :parameters (?t ?l1 ?l2 ?c)
     :precondition (and (truck ?t) (location ?l1) (location ?l2) (city ?c)
 		       (at ?t ?l1) (loc ?l1 ?c) (loc ?l2 ?c))
-    :effect (and (at ?t ?l2) (not (at ?t ?l1))))
+    :effect (and (at ?t ?l2) (not (at ?t ?l1)))) 
 
   ;; Fly an airplane between two airports.
   (:action fly
@@ -60,4 +59,11 @@
     :precondition (and (airplane ?p) (airport ?a1) (airport ?a2)
 		       (at ?p ?a1))
     :effect (and (at ?p ?a2) (not (at ?p ?a1))))
+
+  ;; Sail an ship between two bays
+  (:action sail
+     :parameters (?p ?b1 ?b2)
+     :precondition (and (ship ?p) (bay ?b1) (bay ?b2)  
+     		   	(at ?p ?b1))
+     :effect (and (at ?p ?b2) (not (at ?p ?b1))))	
   )

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="aima.core.agent.State"/>
+<fullyQualifiedTypeName name="java.util.Stack"/>
+<fullyQualifiedTypeName name="tddc17.MyAgentState"/>
+<fullyQualifiedTypeName name="aima.core.agent.Action"/>
+<fullyQualifiedTypeName name="com.sun.org.apache.regexp.internal.recompile"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="tddc17.Vertex"/>
+<fullyQualifiedTypeName name="aima.core.environment.liuvacuum.LIUVacuumEnvironment"/>
+<fullyQualifiedTypeName name="aima.core.agent.impl.NoOpAction"/>
+</qualifiedTypeNameHistroy>

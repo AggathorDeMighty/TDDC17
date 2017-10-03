@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;leafNode&apos; in &apos;searchCustom.CustomGraphSearch.search(...)&apos; to &apos;currentNode&apos;&#x0A;- Original project: &apos;lab2_workspace&apos;&#x0A;- Original element: &apos;searchCustom.CustomGraphSearch.search(Problem).leafNode&apos;&#x0A;- Renamed element: &apos;leafNode&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;leafNode&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/lab2_part1\/src&lt;searchCustom{CustomGraphSearch.java[CustomGraphSearch~search~QProblem;@leafNode!1323!1342!1334!1341!QSearchNode;!0!false" name="currentNode" references="true" stamp="1506355038302" version="1.0"/>
+</session>
