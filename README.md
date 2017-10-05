@@ -1,2 +1,2 @@
-# TDDC17 at LiU
+# TDDC17 -- LiU -- AI
 Linköpings universitet
