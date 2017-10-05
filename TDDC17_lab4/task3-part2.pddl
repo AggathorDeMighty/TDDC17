@@ -16,31 +16,74 @@
   (:requirements :strips)
   (:predicates
 
-   ;; Static predicates:
-   (object ?o) (smallpackage ?sp) (mediumpackage ?mp) (largepackage ?lp)
-   (truck ?t) (airplane ?p) (ship ?s) (vehicle ?v)
-   (location ?l) (airport ?a) (city ?c) (loc ?l ?c) (bay ?b)
+  ;; Static predicates:
+  (object ?o) (smallpackage ?sp) (mediumpackage ?mp) (largepackage ?lp)
+  (truck ?t) (airplane ?p) (ship ?s) (vehicle ?v)
+  (location ?l) (airport ?a) (city ?c) (loc ?l ?c) (bay ?b)
 
-   ;; Non-static predicates:
-   (at ?x ?l) ;; ?x (package or vehicle) is at location ?l
-   (in ?p ?v) ;; package ?p is in vehicle ?v
-   )
+  ;; Non-static predicates:
+  (at ?x ?l) ;; ?x (package or vehicle) is at location ?l
+  (in ?p ?v) ;; package ?p is in vehicle ?v
+  )
 
   ;; Actions for loading and unloading packages.
   ;; By declaring all trucks and airplanes to be also "vehicle", we
   ;; can use the same load/unload operator for both (otherwise we
   ;; would need one for each subtype of vehicle).
+    
   (:action load
-    :parameters (?o ?v ?l)
-    :precondition (and (object ?o) (vehicle ?v) (location ?l)
-		       (at ?v ?l) (at ?o ?l))
-    :effect (and (in ?o ?v) (not (at ?o ?l))))
+  :parameters (?sp ?v ?l)
+  :precondition (and (smallpackage ?sp) (vehicle ?v) (location ?l)
+    		(at ?v ?l) (at ?sp ?l))
+  :effect (and (in ?sp ?v) (not (at ?sp ?l))))
 
   (:action unload
-    :parameters (?o ?v ?l)
-    :precondition (and (object ?o) (vehicle ?v) (location ?l)
-		       (at ?v ?l) (in ?o ?v))
-    :effect (and (at ?o ?l) (not (in ?o ?v))))
+  :parameters (?sp ?v ?l)
+  :precondition (and (smallpackage ?sp) (vehicle ?v) (location ?l)
+	       (at ?v ?l) (in ?sp ?v))
+  :effect (and (at ?sp ?l) (not (in ?sp ?v))))
+
+  ;; --- Our load and unload actions for different vehicles whom can take different packages. ---
+
+  (:action loadmediumpackage
+  :parameters (?mp ?p ?l)
+  :precondition (and (mediumpackage ?mp) (airplane ?p) (location ?l)
+ 	   	(at ?p ?l) (at ?mp ?l))
+  :effect (and (in ?mp ?p) (not (at ?mp ?l))))
+
+  (:action unloadmediumpackage
+  :parameters (?mp ?p ?l)
+  :precondition (and (mediumpackage ?mp) (airplane ?p) (location ?l)
+	       (at ?p ?l) (in ?mp ?p))
+  :effect (and (at ?mp ?l) (not (in ?mp ?p))))
+
+  (:action loadlargepackage
+  :parameters (?lp ?s ?l)
+  :precondition (and (largepackage ?lp) (ship ?s) (location ?l)
+ 	   	(at ?s ?l) (at ?lp ?l))
+  :effect (and (in ?lp ?s) (not (at ?lp ?l))))
+
+  (:action unloadlargepackage
+  :parameters (?lp ?s ?l)
+  :precondition (and (largepackage ?lp) (ship ?s) (location ?l)
+	       (at ?s ?l) (in ?lp ?s))
+  :effect (and (at ?lp ?l) (not (in ?lp ?s))))
+
+  ;;-------------------------------------------------------------------
+  (:action loadtruck
+  :parameters (?o ?v ?l)
+  :precondition (and (object ?o) (truck ?v) (location ?l)
+    		(at ?v ?l) (at ?o ?l))
+  :effect (and (in ?o ?v) (not (at ?o ?l))))
+
+  (:action unloadtruck
+  :parameters (?o ?v ?l)
+  :precondition (and (object ?o) (truck ?v) (location ?l)
+	       (at ?v ?l) (in ?o ?v))
+  :effect (and (at ?o ?l) (not (in ?o ?v))))
+
+
+  ;; -------------------------------- end of loads / unloads ------------------------
 
   ;; Drive a truck between two locations in the same city.
   ;; By declaring all locations, including airports, to be of type

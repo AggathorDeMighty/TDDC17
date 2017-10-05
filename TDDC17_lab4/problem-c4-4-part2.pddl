@@ -7,9 +7,23 @@
             office1 office2 office3 office4 office5
 	    airport1 airport2 airport3 airport4 
 	    bay1 bay2 bay3 ;; Our bays
-	    city1 city2 city3 city4 city5)
+	    city1 city2 city3 city4 city5
+	    smallpackage mediumpackage largepackage)
 
-  (:init (object packet1) (object packet2) (object packet3) (object packet4) (object packet5) 
+  (:init (smallpackage packet1)
+  	 (object packet1) 
+
+  	 (smallpackage packet2)
+	 (object packet2)
+
+	 (smallpackage packet3)
+	 (object packet3)
+
+  	 (smallpackage packet4)
+	 (object packet4)
+
+	 (largepackage packet5)
+	 (object packet5)
          
 	 (truck truck1) (truck truck2) (truck truck3) (truck truck4) (truck truck5)
          (vehicle truck1) (vehicle truck2) (vehicle truck3) (vehicle truck4) (vehicle truck5)
@@ -46,11 +60,11 @@
 
 	 (at truck3 office3) (at truck4 office4) (at truck5 office5)
 
-	 (at airplane1 airport2)
+	 (at airplane1 airport1)
 
 	 (at ship1 bay1))
 
-  (:goal (and (at packet1 office2) (at packet2 office3)
+  (:goal  (and (at packet1 office2) (at packet2 office3)
 	      (at packet3 office4) (at packet4 office1)
 	      (at packet5 office5) ))
-  )
+	      )
