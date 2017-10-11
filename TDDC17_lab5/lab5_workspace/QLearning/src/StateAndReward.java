@@ -1,8 +1,12 @@
 public class StateAndReward {
 	
-	private static final int NUMBER_OF_ANGLE_STATES = 11;
+	private static final int NUMBER_OF_ANGLE_STATES = 21;
 	private static final double MIN_ANGLE = -2;
 	private static final double MAX_ANGLE = 2;
+	
+	private static final int NUMBER_OF_HOVER_STATES = 3;
+	private static final double MIN_VELOCITY = -1;
+	private static final double MAX_VELOCITY = 1;
 
 	
 	/* State discretization function for the angle controller */
@@ -16,7 +20,7 @@ public class StateAndReward {
 
 	/* Reward function for the angle controller */
 	public static double getRewardAngle(double angle, double vx, double vy) {
-		System.out.println("amgöe === " + Math.toDegrees(angle));
+		//System.out.println("amgöe === " + Math.toDegrees(angle));
 		/* TODO: IMPLEMENT THIS FUNCTION */
 		if(Math.abs(angle) >= MAX_ANGLE){
 			return 0;
@@ -26,25 +30,51 @@ public class StateAndReward {
 			return (1 - Math.pow(Math.abs(angle)/MAX_ANGLE, 2));
 		}
 	}
+	
+	public static double getRewardVelocity(double v) {
+		/* TODO: IMPLEMENT THIS FUNCTION */
+		if(Math.abs(v) >= MAX_VELOCITY){
+			return 0;
+		}
+		else {
+			//System.out.println("Reward ====== " + (1 - Math.pow(Math.abs(angle)/MAX_ANGLE, 2)));
+			return (1 - Math.pow(Math.abs(v)/MAX_VELOCITY, 2));
+		}
+	}
 
 	/* State discretization function for the full hover controller */
 	public static String getStateHover(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
-		String state = "OneStateToRuleThemAll2";
+		String stateVx = "stateVxNr" + Integer.toString(discretize(vx, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY));
+		String stateVy = "stateVyNr" + Integer.toString(discretize(vy, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY));
+		String stateAngle = "stateAngleNr" + Integer.toString(discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE));
+		//System.out.println("stateVx: " + stateVx + " stateVy: " + stateVy);
 		
-		return state;
+		return stateVx + stateVy + stateAngle;
 	}
 
 	/* Reward function for the full hover controller */
 	public static double getRewardHover(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
+		int disVx = discretize(vx, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY);
+		int disVy = discretize(vy, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY);
+		int disAngle = discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE);
 		
-		double reward = 0;
-
-		return reward;
+		
+		return getRewardAngle(angle, vx, vy) + getRewardVelocity(vx) + getRewardVelocity(vy);
+		/*
+		if(disVx == 0 && disVy == 0 && disAngle < 11){
+			return 0;
+		}
+		else if(disVx == 1 && disVy == 1 && disAngle == 11){
+			return 100;
+		}
+		else if(disVx == 2 && disVy == 2 && disAngle > 11){
+			return 0;
+		}*/
 	}
 
 	// ///////////////////////////////////////////////////////////

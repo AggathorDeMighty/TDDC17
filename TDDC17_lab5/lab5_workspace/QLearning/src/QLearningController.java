@@ -38,7 +38,7 @@ public class QLearningController extends Controller {
 	RocketEngine middleEngine;
 	RocketEngine rightEngine;
 
-	final static int NUM_ACTIONS = 7; /* The takeAction function must be changed if this is modified */
+	final static int NUM_ACTIONS = 4; /* The takeAction function must be changed if this is modified */
 	
 	/* Keep track of the previous state and action */
 	String previous_state = null;
@@ -125,6 +125,7 @@ public class QLearningController extends Controller {
 		case LEFT_ENGINE:
 			leftRocket();
 			break;
+			/*
 		case RIGHT_MIDDLE_ENGINE:
 			rightRocket();
 			middleRocket();
@@ -137,7 +138,7 @@ public class QLearningController extends Controller {
 			leftRocket();
 			rightRocket();
 			middleRocket();
-			break;
+			break; */
 		default: 
 			resetRockets();
 			break;
@@ -149,7 +150,8 @@ public class QLearningController extends Controller {
 		iteration++;
 		
 		if (!paused) {
-			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
+			//String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
+			String new_state = StateAndReward.getStateHover(angle.getValue(), vx.getValue(), vy.getValue());
 			// System.out.println("State: " + new_state);
 
 			/* Repeat the chosen action for a while, hoping to reach a new state. This is a trick to speed up learning on this problem. */
@@ -157,7 +159,8 @@ public class QLearningController extends Controller {
 			if (new_state.equals(previous_state) && action_counter < REPEAT_ACTION_MAX) {
 				return;
 			}
-			double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy);
+			//double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy);
+			double previous_reward = StateAndReward.getRewardHover(previous_angle, previous_vx, previous_vy);
 			action_counter = 0;
 
 			/* The agent is in a new state, do learning and action selection */
