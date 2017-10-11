@@ -150,7 +150,7 @@ public class QLearningController extends Controller {
 		
 		if (!paused) {
 			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
-			System.out.println("State: " + new_state);
+			// System.out.println("State: " + new_state);
 
 			/* Repeat the chosen action for a while, hoping to reach a new state. This is a trick to speed up learning on this problem. */
 			action_counter++;
@@ -187,7 +187,7 @@ public class QLearningController extends Controller {
 				
 				
 				int action = selectAction(new_state); /* Make sure you understand how it selects an action */
-				System.out.println("Do action: " + action);
+				//System.out.println("Do action: " + action);
 
 				performAction(action);
 				

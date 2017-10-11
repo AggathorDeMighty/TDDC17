@@ -1,52 +1,30 @@
 public class StateAndReward {
+	
+	private static final int NUMBER_OF_ANGLE_STATES = 11;
+	private static final double MIN_ANGLE = -2;
+	private static final double MAX_ANGLE = 2;
 
 	
 	/* State discretization function for the angle controller */
 	public static String getStateAngle(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
-		int discretization = discretize(
-		String state;
-		
-		if(0 <= angle && angle < Math.PI/2){
-			state = "quadrant1";
-		}
-		else if(Math.PI/2 <= angle && angle < Math.PI){
-			state = "quadrant2";
-		}
-		else if(angle <= -Math.PI/2 && -Math.PI < angle) {
-			state = "quadrant3";
-		}
-		else if(angle <= 0 && -Math.PI/2 < angle){
-			state = "quadrant4";
-		}
-		else {
-			state = "Error";
-			
-		}
+		//System.out.println(discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE));
+		String state = "stateNr" + Integer.toString(discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE));
 		return state;
 	}
 
 	/* Reward function for the angle controller */
 	public static double getRewardAngle(double angle, double vx, double vy) {
-
+		System.out.println("amgöe === " + Math.toDegrees(angle));
 		/* TODO: IMPLEMENT THIS FUNCTION */
-		double reward = 0;
-		String currentAngleState = getStateAngle(angle, vx, vy);
-		
-		if(currentAngleState.equals("quadrant1")){
-			reward = 10;
+		if(Math.abs(angle) >= MAX_ANGLE){
+			return 0;
 		}
-		else if(currentAngleState.equals("quadrant2")){
-			reward = -10;
+		else {
+			//System.out.println("Reward ====== " + (1 - Math.pow(Math.abs(angle)/MAX_ANGLE, 2)));
+			return (1 - Math.pow(Math.abs(angle)/MAX_ANGLE, 2));
 		}
-		else if(currentAngleState.equals("quadrant3")){
-			reward = -10;
-		}
-		else if(currentAngleState.equals("quadrant4")){
-			reward = 10;
-		}
-		return reward;
 	}
 
 	/* State discretization function for the full hover controller */
@@ -96,9 +74,10 @@ public class StateAndReward {
 		if (value > max) {
 			return nrValues - 1;
 		}
-
+		
 		double tempValue = value - min;
 		double ratio = tempValue / diff;
+		//System.out.println("Diff: " + diff  + " Tempvalue: " + tempValue + " Ratio: " + ratio + " Angle sent in was = " + (Math.toDegrees(value)));
 
 		return (int) (ratio * (nrValues - 2)) + 1;
 	}
