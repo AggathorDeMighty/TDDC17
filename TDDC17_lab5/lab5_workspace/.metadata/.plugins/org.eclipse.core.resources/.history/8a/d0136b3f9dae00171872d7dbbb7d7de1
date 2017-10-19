@@ -1,0 +1,129 @@
+public class StateAndReward {
+	
+	private static final int NUMBER_OF_ANGLE_STATES = 21;
+	private static final double MIN_ANGLE = -2;
+	private static final double MAX_ANGLE = 2;
+	
+	private static final int NUMBER_OF_HOVER_STATES = 11;
+	private static final double MIN_VELOCITY = -1;
+	private static final double MAX_VELOCITY = 1;
+
+	
+	/* State discretization function for the angle controller */
+	public static String getStateAngle(double angle, double vx, double vy) {
+
+		/* TODO: IMPLEMENT THIS FUNCTION */
+		//System.out.println(discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE));
+		String state = "stateNr" + Integer.toString(discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE));
+		return state;
+	}
+
+	/* Reward function for the angle controller */
+	public static double getRewardAngle(double angle, double vx, double vy) {
+		System.out.println("amgöe === " + Math.toDegrees(angle));
+		/* TODO: IMPLEMENT THIS FUNCTION */
+		if(Math.abs(angle) >= MAX_ANGLE){
+			return 0;
+		}
+		else {
+			//System.out.println("Reward ====== " + (1 - Math.pow(Math.abs(angle)/MAX_ANGLE, 2)));
+			return (1 - Math.pow(Math.abs(angle)/MAX_ANGLE, 2));
+		}
+	}
+
+	/* State discretization function for the full hover controller */
+	public static String getStateHover(double angle, double vx, double vy) {
+
+		/* TODO: IMPLEMENT THIS FUNCTION */
+
+		String stateVx = "stateVxNr" + Integer.toString(discretize(vx, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY));
+		String stateVy = "stateVyNr" + Integer.toString(discretize(vy, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY));
+		String stateAngle = "stateAngleNr" + Integer.toString(discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE));
+		//System.out.println("stateVx: " + stateVx + " stateVy: " + stateVy);
+		
+		return stateVx + stateVy + stateAngle;
+	}
+
+	/* Reward function for the full hover controller */
+	public static double getRewardHover(double angle, double vx, double vy) {
+
+		/* TODO: IMPLEMENT THIS FUNCTION */
+		int disVx = discretize(vx, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY);
+		int disVy = discretize(vy, NUMBER_OF_HOVER_STATES, MIN_VELOCITY, MAX_VELOCITY);
+		int disAngle = discretize(angle, NUMBER_OF_ANGLE_STATES, MIN_ANGLE, MAX_ANGLE);
+		
+		if(disVx == 6 && disVy == 6 && disAngle == 10){
+			return 100;
+		}
+		else if(disVx == 5 && disVy == 5 && (disAngle == 10 || disAngle == 11 || disAngle == 9)){
+			return 30;
+		}
+		else if(disVx == 4 && disVy == 4 && (disAngle == 10 || disAngle == 11 || disAngle == 9)){
+			return 15;
+		}
+		return 0;
+	}
+
+	// ///////////////////////////////////////////////////////////
+	// discretize() performs a uniform discretization of the
+	// value parameter.
+	// It returns an integer between 0 and nrValues-1.
+	// The min and max parameters are used to specify the interval
+	// for the discretization.
+	// If the value is lower than min, 0 is returned
+	// If the value is higher than min, nrValues-1 is returned
+	// otherwise a value between 1 and nrValues-2 is returned.
+	//
+	// Use discretize2() if you want a discretization method that does
+	// not handle values lower than min and higher than max.
+	// ///////////////////////////////////////////////////////////
+	public static int discretize(double value, int nrValues, double min,
+			double max) {
+		if (nrValues < 2) {
+			return 0;
+		}
+
+		double diff = max - min;
+
+		if (value < min) {
+			return 0;
+		}
+		if (value > max) {
+			return nrValues - 1;
+		}
+		
+		double tempValue = value - min;
+		double ratio = tempValue / diff;
+		//System.out.println("Diff: " + diff  + " Tempvalue: " + tempValue + " Ratio: " + ratio + " Angle sent in was = " + (Math.toDegrees(value)));
+
+		return (int) (ratio * (nrValues - 2)) + 1;
+	}
+
+	// ///////////////////////////////////////////////////////////
+	// discretize2() performs a uniform discretization of the
+	// value parameter.
+	// It returns an integer between 0 and nrValues-1.
+	// The min and max parameters are used to specify the interval
+	// for the discretization.
+	// If the value is lower than min, 0 is returned
+	// If the value is higher than min, nrValues-1 is returned
+	// otherwise a value between 0 and nrValues-1 is returned.
+	// ///////////////////////////////////////////////////////////
+	public static int discretize2(double value, int nrValues, double min,
+			double max) {
+		double diff = max - min;
+
+		if (value < min) {
+			return 0;
+		}
+		if (value > max) {
+			return nrValues - 1;
+		}
+
+		double tempValue = value - min;
+		double ratio = tempValue / diff;
+
+		return (int) (ratio * nrValues);
+	}
+
+}

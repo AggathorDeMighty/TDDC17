@@ -115,7 +115,7 @@ class MyAgentProgram implements AgentProgram {
 	private Random random_generator = new Random();
 	
 	// Here you can define your variables!
-	public int iterationCounter = 500;
+	public int iterationCounter = 1000;
 	public MyAgentState state = new MyAgentState();
 	
 	// moves the Agent to a random start position
